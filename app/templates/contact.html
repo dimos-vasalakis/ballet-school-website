@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Contact — Étoile Ballet School{% endblock %}
+{% block content %}
+<section class="section container">
+  <h1>Contact Us</h1>
+
+  {% if submitted %}
+  <p class="success-message">Thank you, {{ name }}! We'll be in touch soon.</p>
+  {% endif %}
+
+  <div class="contact-grid">
+    <form class="contact-form" method="post" action="/contact">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="5" required></textarea>
+
+      <button type="submit" class="btn">Send Message</button>
+    </form>
+
+    <div class="contact-info">
+      <h2>Visit Us</h2>
+      <p>123 Studio Lane<br>Springfield, USA</p>
+      <p>Phone: (555) 123-4567</p>
+      <p>Email: info@etoileballet.example</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
