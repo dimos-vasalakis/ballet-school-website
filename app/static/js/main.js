@@ -9,3 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
     toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
   });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const authPanel = document.getElementById("authPanel");
+  if (!authPanel) return;
+
+  document.querySelectorAll(".auth-toggle").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      authPanel.setAttribute("data-view", btn.dataset.target);
+    });
+  });
+});

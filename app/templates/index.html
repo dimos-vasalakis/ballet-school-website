@@ -1,34 +1,47 @@
 {% extends "base.html" %}
-{% block title %}Étoile Ballet School — Home{% endblock %}
+{% block title %}T.PARADISE Ballet School — Home{% endblock %}
 {% block content %}
 <section class="hero">
-  <div class="container">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="container hero-inner">
+    <p class="eyebrow">Est. 1998 &middot; Springfield</p>
     <h1>Grace in Every Movement</h1>
-    <p>Classical ballet training for students of all ages, from first steps to pointe.</p>
-    <a class="btn" href="/classes">View Classes</a>
+    <p class="hero-lead">Classical ballet training for students of all ages, from first steps to pointe.</p>
+    <div class="hero-actions">
+      <a class="btn" href="/classes">View Classes</a>
+      <a class="btn btn-ghost" href="/about">Our Story</a>
+    </div>
+    <div class="hero-image-wrap">
+      <img src="/static/images/ballerina.svg" alt="Illustration of a ballet dancer in an arabesque pose" class="hero-image">
+    </div>
   </div>
 </section>
 
 <section class="section container">
-  <h2>Welcome</h2>
-  <p>
-    Étoile Ballet School has been nurturing dancers in our community since 1998.
-    Our experienced instructors guide students through a structured curriculum
-    rooted in classical technique, building strength, discipline, and a lifelong
-    love of dance.
-  </p>
+  <div class="welcome-card">
+    <h2>Welcome</h2>
+    <p>
+      T.PARADISE Ballet School has been nurturing dancers in our community since 1998.
+      Our experienced instructors guide students through a structured curriculum
+      rooted in classical technique, building strength, discipline, and a lifelong
+      love of dance.
+    </p>
+  </div>
 </section>
 
 <section class="section container highlights">
   <div class="highlight">
+    <div class="highlight-icon">&#127925;</div>
     <h3>Expert Instruction</h3>
     <p>Small class sizes led by professionally trained instructors.</p>
   </div>
   <div class="highlight">
+    <div class="highlight-icon">&#128104;&#8205;&#128170;</div>
     <h3>All Ages Welcome</h3>
     <p>Programs for children, teens, and adults at every level.</p>
   </div>
   <div class="highlight">
+    <div class="highlight-icon">&#127903;</div>
     <h3>Performance Opportunities</h3>
     <p>Annual recitals and showcases to celebrate student progress.</p>
   </div>

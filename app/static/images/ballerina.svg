@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-labelledby="ballerinaTitle">
+  <title id="ballerinaTitle">Illustration of a ballet dancer in an arabesque pose</title>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#f7e6e0" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#f7e6e0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="115" cy="150" rx="115" ry="150" fill="url(#glow)"/>
+
+  <g fill="none" stroke="#8c3f4d" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- front arm, curved down and out -->
+    <path d="M92,96 C68,90 45,80 28,58"/>
+    <!-- back arm, curved up over head -->
+    <path d="M110,92 C122,68 145,48 165,26"/>
+    <!-- standing leg -->
+    <path d="M97,186 C93,222 91,262 88,298"/>
+    <!-- pointe foot -->
+    <path d="M88,298 L104,304"/>
+    <!-- extended back leg (arabesque) -->
+    <path d="M107,186 C138,190 172,176 205,142"/>
+    <path d="M205,142 L221,150"/>
+  </g>
+
+  <g fill="#b56472">
+    <!-- torso + tutu silhouette -->
+    <path d="M100,52
+             C89,61 84,76 87,94
+             C68,101 50,113 40,140
+             C67,136 84,128 96,120
+             C91,141 89,165 101,186
+             C113,165 111,141 106,120
+             C118,128 135,136 162,140
+             C152,113 134,101 115,94
+             C118,76 113,61 100,52 Z"/>
+  </g>
+
+  <circle cx="100" cy="35" r="16" fill="#cf9d4f"/>
+  <circle cx="100" cy="21" r="6" fill="#cf9d4f"/>
+</svg>

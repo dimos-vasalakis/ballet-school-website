@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="TParadise Ballet School")
+app = FastAPI(title="T.PARADISE Ballet School")
 app.add_middleware(SessionMiddleware, secret_key=os.environ["SECRET_KEY"])
 
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
@@ -102,9 +102,7 @@ async def contact_submit(
 
 @app.get("/signup", response_class=HTMLResponse)
 async def signup(request: Request):
-    return templates.TemplateResponse(
-        "signup.html", {"request": request, "nav_links": NAV_LINKS, "active": "/signup"}
-    )
+    return RedirectResponse(url="/login", status_code=307)
 
 
 @app.post("/signup", response_class=HTMLResponse)
@@ -128,11 +126,12 @@ async def signup_submit(
 
     if error:
         return templates.TemplateResponse(
-            "signup.html",
+            "login.html",
             {
                 "request": request,
                 "nav_links": NAV_LINKS,
-                "active": "/signup",
+                "active": "/login",
+                "view": "signup",
                 "error": error,
                 "name": name,
                 "email": email,
@@ -152,7 +151,7 @@ async def signup_submit(
 @app.get("/login", response_class=HTMLResponse)
 async def login(request: Request):
     return templates.TemplateResponse(
-        "login.html", {"request": request, "nav_links": NAV_LINKS, "active": "/login"}
+        "login.html", {"request": request, "nav_links": NAV_LINKS, "active": "/login", "view": "login"}
     )
 
 
@@ -173,6 +172,7 @@ async def login_submit(
                 "request": request,
                 "nav_links": NAV_LINKS,
                 "active": "/login",
+                "view": "login",
                 "error": "Invalid email or password.",
                 "email": email,
             },

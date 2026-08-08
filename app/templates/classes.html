@@ -1,29 +1,31 @@
 {% extends "base.html" %}
-{% block title %}Classes — Étoile Ballet School{% endblock %}
+{% block title %}Classes — T.PARADISE Ballet School{% endblock %}
 {% block content %}
 <section class="section container">
   <h1>Classes &amp; Schedule</h1>
-  <p>Find the right class for your age and level below.</p>
+  <p class="lead">Find the right class for your age and level below.</p>
 
-  <table class="schedule">
-    <thead>
-      <tr>
-        <th>Class</th>
-        <th>Ages</th>
-        <th>Days</th>
-        <th>Time</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for c in classes %}
-      <tr>
-        <td>{{ c.name }}</td>
-        <td>{{ c.ages }}</td>
-        <td>{{ c.day }}</td>
-        <td>{{ c.time }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="schedule-card">
+    <table class="schedule">
+      <thead>
+        <tr>
+          <th>Class</th>
+          <th>Ages</th>
+          <th>Days</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in classes %}
+        <tr>
+          <td data-label="Class">{{ c.name }}</td>
+          <td data-label="Ages">{{ c.ages }}</td>
+          <td data-label="Days">{{ c.day }}</td>
+          <td data-label="Time">{{ c.time }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </section>
 {% endblock %}

@@ -1,23 +1,30 @@
 {% extends "base.html" %}
-{% block title %}About — Étoile Ballet School{% endblock %}
+{% block title %}About — T.PARADISE Ballet School{% endblock %}
 {% block content %}
 <section class="section container">
   <h1>About Us</h1>
-  <p>
-    Founded in 1998, Étoile Ballet School has grown from a single studio into
+  <p class="lead">
+    Founded in 1998, T.PARADISE Ballet School has grown from a single studio into
     a welcoming home for dancers of all ages and skill levels. We believe
     ballet builds not only technique, but confidence, focus, and grace that
     carries far beyond the studio.
   </p>
-  <h2>Our Mission</h2>
-  <p>
-    To provide high-quality classical ballet education in a supportive
-    environment where every student can grow at their own pace.
-  </p>
-  <h2>Our Studio</h2>
-  <p>
-    Our studio features sprung floors, mirrored walls, and professional
-    barres, giving dancers a safe and inspiring space to train.
-  </p>
+
+  <div class="about-grid">
+    <div class="about-card">
+      <h2>Our Mission</h2>
+      <p>
+        To provide high-quality classical ballet education in a supportive
+        environment where every student can grow at their own pace.
+      </p>
+    </div>
+    <div class="about-card">
+      <h2>Our Studio</h2>
+      <p>
+        Our studio features sprung floors, mirrored walls, and professional
+        barres, giving dancers a safe and inspiring space to train.
+      </p>
+    </div>
+  </div>
 </section>
 {% endblock %}

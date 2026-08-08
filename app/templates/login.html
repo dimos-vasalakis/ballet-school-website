@@ -1,23 +1,55 @@
 {% extends "base.html" %}
-{% block title %}Log In — Étoile Ballet School{% endblock %}
+{% block title %}{% if view == 'signup' %}Sign Up{% else %}Log In{% endif %} — T.PARADISE Ballet School{% endblock %}
 {% block content %}
-<section class="section container">
-  <h1>Log In</h1>
+<section class="section container auth-section">
+  <div class="auth-panel" data-view="{{ view or 'login' }}" id="authPanel">
 
-  {% if error %}
-  <p class="error-message">{{ error }}</p>
-  {% endif %}
+    <div class="auth-card login-card" id="loginCard">
+      <h1>Log In</h1>
 
-  <form class="auth-form" method="post" action="/login">
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" value="{{ email or '' }}" required>
+      {% if view != 'signup' and error %}
+      <p class="error-message">{{ error }}</p>
+      {% endif %}
 
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required>
+      <form class="auth-form" method="post" action="/login">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ email or '' }}" required>
 
-    <button type="submit" class="btn">Log In</button>
-  </form>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
 
-  <p class="auth-switch">Don't have an account? <a href="/signup">Sign up</a></p>
+        <button type="submit" class="btn">Log In</button>
+      </form>
+
+      <p class="auth-switch">New here? <button type="button" class="link-btn auth-toggle" data-target="signup">Get Started</button></p>
+    </div>
+
+    <div class="auth-card signup-card" id="signupCard">
+      <h1>Create an Account</h1>
+
+      {% if view == 'signup' and error %}
+      <p class="error-message">{{ error }}</p>
+      {% endif %}
+
+      <form class="auth-form" method="post" action="/signup">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" value="{{ name or '' }}" required>
+
+        <label for="signup_email">Email</label>
+        <input type="email" id="signup_email" name="email" value="{{ email or '' }}" required>
+
+        <label for="signup_password">Password</label>
+        <input type="password" id="signup_password" name="password" minlength="8" required>
+
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" minlength="8" required>
+
+        <button type="submit" class="btn">Sign Up</button>
+      </form>
+
+      <p class="auth-switch">Already have an account? <button type="button" class="link-btn auth-toggle" data-target="login">Log In</button></p>
+    </div>
+
+  </div>
 </section>
 {% endblock %}

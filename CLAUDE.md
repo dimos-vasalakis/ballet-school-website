@@ -21,6 +21,11 @@ MVP is in place: a FastAPI app under `app/` with server-rendered Jinja2 template
 - Run the dev server: `uvicorn app.main:app --reload`
 - do some commits every time you complete a task worth of commiting
 
+## Code Review
+
+- After implementing or editing any code, invoke the `code-review-subagent` (Agent tool) to review the diff before reporting the task as done. It only reviews changed files/hunks, not the whole codebase.
+- Also invoke `code-review-subagent` whenever the user asks for a code review.
+
 ## Architecture
 
 - `app/main.py` — FastAPI app, route handlers, in-memory `NAV_LINKS`/`CLASSES` data.
