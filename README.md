@@ -4,7 +4,7 @@ A website for a ballet school, built with [FastAPI](https://fastapi.tiangolo.com
 
 ## Status
 
-Early development — project scaffolding is not yet in place.
+MVP complete — Home, About, Classes, and Contact pages, served via server-rendered Jinja2 templates.
 
 ## Getting Started
 
@@ -18,7 +18,7 @@ Early development — project scaffolding is not yet in place.
 # Activate the virtual environment
 source venv/bin/activate
 
-# Install dependencies (once requirements.txt exists)
+# Install dependencies
 pip install -r requirements.txt
 ```
 
@@ -32,4 +32,4 @@ Copy `.env` and fill in the required values (none defined yet).
 uvicorn app.main:app --reload
 ```
 
-*(entrypoint not yet created)*
+Then visit http://127.0.0.1:8000
