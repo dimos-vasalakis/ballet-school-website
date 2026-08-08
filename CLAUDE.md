@@ -19,6 +19,7 @@ MVP is in place: a FastAPI app under `app/` with server-rendered Jinja2 template
 ## Commands
 
 - Run the dev server: `uvicorn app.main:app --reload`
+- do some commits every time you complete a task worth of commiting
 
 ## Architecture
 

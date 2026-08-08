@@ -1,16 +1,39 @@
+import os
 from pathlib import Path
 
-from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse
+from dotenv import load_dotenv
+from fastapi import Depends, FastAPI, Form, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
+from starlette.middleware.sessions import SessionMiddleware
+
+from app.auth import get_current_user, hash_password, verify_password
+from app.database import Base, engine, get_db
+from app.models import User
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
 
-app = FastAPI(title="Étoile Ballet School")
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="TParadise Ballet School")
+app.add_middleware(SessionMiddleware, secret_key=os.environ["SECRET_KEY"])
 
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
-templates = Jinja2Templates(directory=BASE_DIR / "templates")
+
+
+def template_globals(request: Request) -> dict:
+    db = next(get_db())
+    try:
+        return {"current_user": get_current_user(request, db)}
+    finally:
+        db.close()
+
+
+templates = Jinja2Templates(directory=BASE_DIR / "templates", context_processors=[template_globals])
 
 NAV_LINKS = [
     {"name": "Home", "path": "/"},
@@ -75,3 +98,92 @@ async def contact_submit(
             "name": name,
         },
     )
+
+
+@app.get("/signup", response_class=HTMLResponse)
+async def signup(request: Request):
+    return templates.TemplateResponse(
+        "signup.html", {"request": request, "nav_links": NAV_LINKS, "active": "/signup"}
+    )
+
+
+@app.post("/signup", response_class=HTMLResponse)
+async def signup_submit(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
+    confirm_password: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    error = None
+    email = email.strip().lower()
+
+    if password != confirm_password:
+        error = "Passwords do not match."
+    elif len(password) < 8:
+        error = "Password must be at least 8 characters."
+    elif db.query(User).filter(User.email == email).first() is not None:
+        error = "An account with that email already exists."
+
+    if error:
+        return templates.TemplateResponse(
+            "signup.html",
+            {
+                "request": request,
+                "nav_links": NAV_LINKS,
+                "active": "/signup",
+                "error": error,
+                "name": name,
+                "email": email,
+            },
+            status_code=400,
+        )
+
+    user = User(name=name, email=email, hashed_password=hash_password(password))
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    request.session["user_id"] = user.id
+    return RedirectResponse(url="/", status_code=303)
+
+
+@app.get("/login", response_class=HTMLResponse)
+async def login(request: Request):
+    return templates.TemplateResponse(
+        "login.html", {"request": request, "nav_links": NAV_LINKS, "active": "/login"}
+    )
+
+
+@app.post("/login", response_class=HTMLResponse)
+async def login_submit(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    email = email.strip().lower()
+    user = db.query(User).filter(User.email == email).first()
+
+    if user is None or not verify_password(password, user.hashed_password):
+        return templates.TemplateResponse(
+            "login.html",
+            {
+                "request": request,
+                "nav_links": NAV_LINKS,
+                "active": "/login",
+                "error": "Invalid email or password.",
+                "email": email,
+            },
+            status_code=400,
+        )
+
+    request.session["user_id"] = user.id
+    return RedirectResponse(url="/", status_code=303)
+
+
+@app.post("/logout")
+async def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse(url="/", status_code=303)

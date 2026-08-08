@@ -39,6 +39,9 @@ htmlcov/
 # Django
 *.sqlite3
 db.sqlite3
+
+# App database
+app.db
 media/
 staticfiles/
 local_settings.py
