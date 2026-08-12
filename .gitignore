@@ -68,3 +68,6 @@ Thumbs.db
 
 # Node (frontend tooling, if any)
 node_modules/
+
+# Claude Code personal/local settings
+.claude/settings.local.json
