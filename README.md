@@ -4,7 +4,7 @@ A website for a ballet school, built with [FastAPI](https://fastapi.tiangolo.com
 
 ## Status
 
-MVP complete — Home, About, Classes, and Contact pages, served via server-rendered Jinja2 templates.
+MVP complete — Home, About, Classes, Contact, and Login/Signup pages, server-rendered with Jinja2 and backed by async SQLAlchemy + SQLite.
 
 ## Getting Started
 
@@ -24,7 +24,12 @@ pip install -r requirements.txt
 
 ### Environment Variables
 
-Copy `.env` and fill in the required values (none defined yet).
+Copy `.env.example` to `.env` and set `SECRET_KEY` (used to sign session cookies):
+
+```bash
+cp .env.example .env
+python3 -c "import secrets; print(secrets.token_hex(32))"  # paste the output as SECRET_KEY
+```
 
 ### Running the app
 
@@ -33,3 +38,9 @@ uvicorn app.main:app --reload
 ```
 
 Then visit http://127.0.0.1:8000
+
+### Running the tests
+
+```bash
+pytest
+```
