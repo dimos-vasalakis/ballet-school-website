@@ -13,7 +13,9 @@ async def hash_password(password: str) -> str:
 
 
 async def verify_password(password: str, hashed_password: str) -> bool:
-    return await asyncio.to_thread(bcrypt.checkpw, password.encode("utf-8"), hashed_password.encode("utf-8"))
+    return await asyncio.to_thread(
+        bcrypt.checkpw, password.encode("utf-8"), hashed_password.encode("utf-8")
+    )
 
 
 async def get_current_user(request: Request, db: AsyncSession) -> User | None:

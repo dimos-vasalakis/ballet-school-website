@@ -50,9 +50,7 @@ async def contact_submit(
     message: str = Form(...),
     db: AsyncSession = Depends(get_db),
 ):
-    return await render(
-        request, db, "contact.html", "/contact", submitted=True, name=name
-    )
+    return await render(request, db, "contact.html", "/contact", submitted=True, name=name)
 
 
 @router.get("/robots.txt", include_in_schema=False)

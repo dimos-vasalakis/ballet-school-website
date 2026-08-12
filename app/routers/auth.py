@@ -60,9 +60,7 @@ async def signup_submit(
 
 
 @router.get("/login", response_class=HTMLResponse)
-async def login(
-    request: Request, view: str = "login", db: AsyncSession = Depends(get_db)
-):
+async def login(request: Request, view: str = "login", db: AsyncSession = Depends(get_db)):
     return await render(request, db, "login.html", "/login", view=view)
 
 
@@ -74,9 +72,7 @@ async def login_submit(
     db: AsyncSession = Depends(get_db),
 ):
     email = email.strip().lower()
-    user = (
-        await db.execute(select(User).where(User.email == email))
-    ).scalar_one_or_none()
+    user = (await db.execute(select(User).where(User.email == email))).scalar_one_or_none()
 
     if user is None or not await verify_password(password, user.hashed_password):
         return await render(

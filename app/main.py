@@ -42,13 +42,9 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
             current_user = await get_current_user(request, db)
         context = base_context(request, current_user=current_user)
         return templates.TemplateResponse("errors/404.html", context, status_code=404)
-    return JSONResponse(
-        {"detail": exc.detail}, status_code=exc.status_code, headers=exc.headers
-    )
+    return JSONResponse({"detail": exc.detail}, status_code=exc.status_code, headers=exc.headers)
 
 
 @app.exception_handler(Exception)
 async def server_error_handler(request: Request, exc: Exception):
-    return templates.TemplateResponse(
-        "errors/500.html", base_context(request), status_code=500
-    )
+    return templates.TemplateResponse("errors/500.html", base_context(request), status_code=500)

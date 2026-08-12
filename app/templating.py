@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi import Request
@@ -15,12 +15,10 @@ templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 
 def current_year() -> int:
-    return datetime.now(timezone.utc).year
+    return datetime.now(UTC).year
 
 
-def base_context(
-    request: Request, active: str | None = None, current_user=None
-) -> dict:
+def base_context(request: Request, active: str | None = None, current_user=None) -> dict:
     return {
         "request": request,
         "nav_links": NAV_LINKS,
