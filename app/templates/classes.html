@@ -27,5 +27,19 @@
       </tbody>
     </table>
   </div>
+
+  <p class="pricing-note">Tuition is billed monthly and varies by class level. Contact us for current rates and a full pricing sheet.</p>
+</section>
+
+<section class="section container">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-list">
+    {% for item in faq_items %}
+    <details>
+      <summary>{{ item.question }}</summary>
+      <p>{{ item.answer }}</p>
+    </details>
+    {% endfor %}
+  </div>
 </section>
 {% endblock %}

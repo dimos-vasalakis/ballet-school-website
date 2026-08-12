@@ -27,4 +27,29 @@
     </div>
   </div>
 </section>
+
+<section class="section container">
+  <h2>Meet Our Instructors</h2>
+  <div class="instructor-grid">
+    {% for instructor in instructors %}
+    <div class="instructor-card">
+      <h3>{{ instructor.name }}</h3>
+      <p class="instructor-role">{{ instructor.role }}</p>
+      <p>{{ instructor.bio }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section container">
+  <h2>What Families Say</h2>
+  <div class="testimonial-grid">
+    {% for testimonial in testimonials %}
+    <blockquote class="testimonial-card">
+      <p>&ldquo;{{ testimonial.quote }}&rdquo;</p>
+      <cite>{{ testimonial.author }}</cite>
+    </blockquote>
+    {% endfor %}
+  </div>
+</section>
 {% endblock %}

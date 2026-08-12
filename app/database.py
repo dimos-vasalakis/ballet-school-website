@@ -1,22 +1,20 @@
+from collections.abc import AsyncGenerator
 from pathlib import Path
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATABASE_URL = f"sqlite:///{BASE_DIR / 'app.db'}"
+DATABASE_URL = f"sqlite+aiosqlite:///{BASE_DIR / 'app.db'}"
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+engine = create_async_engine(DATABASE_URL)
+SessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
 
 class Base(DeclarativeBase):
     pass
 
 
-def get_db():
-    db = SessionLocal()
-    try:
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    async with SessionLocal() as db:
         yield db
-    finally:
-        db.close()
