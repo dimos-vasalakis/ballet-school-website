@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"\nimport json, sys, subprocess\nd = json.load(sys.stdin)\nf = d.get('tool_response', {}).get('filePath') or d['tool_input'].get('file_path', '')\nif f.endswith('.py'):\n    subprocess.run(['venv/bin/ruff', 'format', f])\n\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}
