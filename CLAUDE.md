@@ -34,17 +34,20 @@ Production-hardened: a FastAPI app under `app/` with server-rendered Jinja2 temp
 ## Architecture
 
 - `app/main.py` — FastAPI app factory: lifespan, logging setup, rate limiter, security headers + session middleware, static mount, router includes, 404/500 exception handlers (500s are logged server-side).
-- `app/config.py` — Settings loader (`SECRET_KEY`, `ENVIRONMENT`, `DATABASE_URL`) with a friendly startup error if `SECRET_KEY` is missing.
+- `app/core/` — cross-cutting infrastructure, framework-agnostic of any single page/route:
+  - `config.py` — Settings loader (`SECRET_KEY`, `ENVIRONMENT`, `DATABASE_URL`) with a friendly startup error if `SECRET_KEY` is missing.
+  - `database.py` — async SQLAlchemy engine/session setup (Postgres via `DATABASE_URL`) and the declarative `Base`.
+  - `security.py` — password hashing/verification and session-based `get_current_user`.
+  - `csrf.py` — CSRF token generation (`get_csrf_token`) and verification dependency (`verify_csrf`); every POST form must include a `csrf_token` hidden field and every POST route must depend on `verify_csrf`.
+  - `rate_limit.py` — shared `slowapi` `Limiter` instance (imported by `main.py` and `routers/auth.py` to avoid a circular import).
+  - `middleware.py` — `SecurityHeadersMiddleware` (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, HSTS in production).
+  - `logging.py` — stdlib logging setup, level gated by `ENVIRONMENT`.
 - `app/content.py` — static placeholder content: nav links, class schedule, instructors, testimonials, FAQ.
+- `app/models.py` — `User` model.
 - `app/templating.py` — shared `Jinja2Templates` instance + `render()`/`base_context()` context helpers used by all routers; `base_context()` also injects a per-session CSRF token.
-- `app/csrf.py` — CSRF token generation (`get_csrf_token`) and verification dependency (`verify_csrf`); every POST form must include a `csrf_token` hidden field and every POST route must depend on `verify_csrf`.
-- `app/rate_limit.py` — shared `slowapi` `Limiter` instance (imported by `main.py` and `routers/auth.py` to avoid a circular import).
-- `app/middleware.py` — `SecurityHeadersMiddleware` (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, HSTS in production).
-- `app/logging_config.py` — stdlib logging setup, level gated by `ENVIRONMENT`.
 - `app/routers/pages.py` — public page routes (`/`, `/about`, `/classes`, `/contact`, `/robots.txt`).
 - `app/routers/auth.py` — signup/login/logout routes (rate-limited, CSRF-protected).
 - `app/routers/health.py` — `/healthz` liveness endpoint.
-- `app/auth.py`, `app/database.py`, `app/models.py` — password hashing/session helpers, async SQLAlchemy engine/session setup (Postgres via `DATABASE_URL`), `User` model.
 - `alembic/`, `alembic.ini` — DB migrations; schema is no longer created via `create_all`, only via `alembic upgrade head`.
 - `app/templates/` — Jinja2 templates: `base.html` layout, `partials/` (nav, footer), `errors/` (404, 500), one template per page.
 - `app/static/` — CSS, JS, images, favicon, `robots.txt`, served at `/static` (`robots.txt` also exposed at `/robots.txt`).

@@ -5,8 +5,8 @@ from fastapi.responses import FileResponse, HTMLResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.content import CLASSES, FAQ_ITEMS, INSTRUCTORS, TESTIMONIALS
-from app.csrf import verify_csrf
-from app.database import get_db
+from app.core.csrf import verify_csrf
+from app.core.database import get_db
 from app.templating import render
 
 BASE_DIR = Path(__file__).resolve().parent.parent

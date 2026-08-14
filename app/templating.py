@@ -6,9 +6,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.auth import get_current_user
 from app.content import NAV_LINKS
-from app.csrf import get_csrf_token
+from app.core.csrf import get_csrf_token
+from app.core.security import get_current_user
 
 BASE_DIR = Path(__file__).resolve().parent
 

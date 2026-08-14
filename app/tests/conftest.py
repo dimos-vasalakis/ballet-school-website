@@ -9,9 +9,9 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.pool import StaticPool
 
-from app.database import Base, get_db
+from app.core.database import Base, get_db
+from app.core.rate_limit import limiter
 from app.main import app
-from app.rate_limit import limiter
 
 
 @pytest_asyncio.fixture

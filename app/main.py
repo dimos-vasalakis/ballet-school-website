@@ -11,12 +11,12 @@ from slowapi.middleware import SlowAPIMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.sessions import SessionMiddleware
 
-from app.auth import get_current_user
-from app.config import get_settings
-from app.database import SessionLocal
-from app.logging_config import configure_logging
-from app.middleware import SecurityHeadersMiddleware
-from app.rate_limit import limiter
+from app.core.config import get_settings
+from app.core.database import SessionLocal
+from app.core.logging import configure_logging
+from app.core.middleware import SecurityHeadersMiddleware
+from app.core.rate_limit import limiter
+from app.core.security import get_current_user
 from app.routers import auth as auth_router
 from app.routers import health, pages
 from app.templating import base_context, templates

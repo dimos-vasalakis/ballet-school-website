@@ -1,6 +1,6 @@
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from app.config import get_settings
+from app.core.config import get_settings
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):

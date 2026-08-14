@@ -3,11 +3,11 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.auth import hash_password, verify_password
-from app.csrf import verify_csrf
-from app.database import get_db
+from app.core.csrf import verify_csrf
+from app.core.database import get_db
+from app.core.rate_limit import limiter
+from app.core.security import hash_password, verify_password
 from app.models import User
-from app.rate_limit import limiter
 from app.templating import render
 
 router = APIRouter()
