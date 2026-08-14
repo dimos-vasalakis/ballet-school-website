@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.content import CLASSES, FAQ_ITEMS, INSTRUCTORS, TESTIMONIALS
+from app.csrf import verify_csrf
 from app.database import get_db
 from app.templating import render
 
@@ -42,7 +43,7 @@ async def contact(request: Request, db: AsyncSession = Depends(get_db)):
     return await render(request, db, "contact.html", "/contact")
 
 
-@router.post("/contact", response_class=HTMLResponse)
+@router.post("/contact", response_class=HTMLResponse, dependencies=[Depends(verify_csrf)])
 async def contact_submit(
     request: Request,
     name: str = Form(...),

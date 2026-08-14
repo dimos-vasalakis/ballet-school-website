@@ -7,6 +7,7 @@
     <li class="nav-user">Hi, {{ current_user.name }}</li>
     <li>
       <form class="logout-form" method="post" action="/logout">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <button type="submit" class="link-btn">Log Out</button>
       </form>
     </li>

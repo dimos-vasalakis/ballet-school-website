@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth import get_current_user
 from app.content import NAV_LINKS
+from app.csrf import get_csrf_token
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -25,6 +26,7 @@ def base_context(request: Request, active: str | None = None, current_user=None)
         "active": active,
         "current_user": current_user,
         "current_year": current_year(),
+        "csrf_token": get_csrf_token(request),
     }
 
 

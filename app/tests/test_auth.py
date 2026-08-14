@@ -2,11 +2,13 @@ import pytest
 from sqlalchemy import select
 
 from app.models import User
+from app.tests.conftest import get_csrf_token
 
 pytestmark = pytest.mark.asyncio
 
 
 async def signup(client, email="jane@example.com", password="supersecret"):
+    csrf_token = await get_csrf_token(client, "/login")
     return await client.post(
         "/signup",
         data={
@@ -14,6 +16,7 @@ async def signup(client, email="jane@example.com", password="supersecret"):
             "email": email,
             "password": password,
             "confirm_password": password,
+            "csrf_token": csrf_token,
         },
     )
 
@@ -43,6 +46,7 @@ async def test_signup_duplicate_email(client, db_session):
 
 
 async def test_signup_password_mismatch(client):
+    csrf_token = await get_csrf_token(client, "/login")
     r = await client.post(
         "/signup",
         data={
@@ -50,6 +54,7 @@ async def test_signup_password_mismatch(client):
             "email": "jane@example.com",
             "password": "supersecret",
             "confirm_password": "different",
+            "csrf_token": csrf_token,
         },
     )
     assert r.status_code == 400
@@ -57,6 +62,7 @@ async def test_signup_password_mismatch(client):
 
 
 async def test_signup_short_password(client):
+    csrf_token = await get_csrf_token(client, "/login")
     r = await client.post(
         "/signup",
         data={
@@ -64,6 +70,7 @@ async def test_signup_short_password(client):
             "email": "jane@example.com",
             "password": "short",
             "confirm_password": "short",
+            "csrf_token": csrf_token,
         },
     )
     assert r.status_code == 400
@@ -72,20 +79,32 @@ async def test_signup_short_password(client):
 
 async def test_login_success(client):
     await signup(client)
-    r = await client.post("/login", data={"email": "jane@example.com", "password": "supersecret"})
+    csrf_token = await get_csrf_token(client, "/login")
+    r = await client.post(
+        "/login",
+        data={"email": "jane@example.com", "password": "supersecret", "csrf_token": csrf_token},
+    )
     assert r.status_code == 303
     assert r.headers["location"] == "/"
 
 
 async def test_login_wrong_password(client):
     await signup(client)
-    r = await client.post("/login", data={"email": "jane@example.com", "password": "wrongpass"})
+    csrf_token = await get_csrf_token(client, "/login")
+    r = await client.post(
+        "/login",
+        data={"email": "jane@example.com", "password": "wrongpass", "csrf_token": csrf_token},
+    )
     assert r.status_code == 400
     assert "Invalid email or password" in r.text
 
 
 async def test_login_nonexistent_user(client):
-    r = await client.post("/login", data={"email": "nobody@example.com", "password": "whatever"})
+    csrf_token = await get_csrf_token(client, "/login")
+    r = await client.post(
+        "/login",
+        data={"email": "nobody@example.com", "password": "whatever", "csrf_token": csrf_token},
+    )
     assert r.status_code == 400
     assert "Invalid email or password" in r.text
 
@@ -95,7 +114,8 @@ async def test_logout_clears_session(client):
     home = await client.get("/")
     assert "Hi, Jane Doe" in home.text
 
-    r = await client.post("/logout")
+    csrf_token = await get_csrf_token(client, "/")
+    r = await client.post("/logout", data={"csrf_token": csrf_token})
     assert r.status_code == 303
 
     home_after = await client.get("/")
@@ -104,9 +124,15 @@ async def test_logout_clears_session(client):
 
 
 async def test_contact_submit_shows_thank_you(client):
+    csrf_token = await get_csrf_token(client, "/contact")
     r = await client.post(
         "/contact",
-        data={"name": "Jane Doe", "email": "jane@example.com", "message": "Hello!"},
+        data={
+            "name": "Jane Doe",
+            "email": "jane@example.com",
+            "message": "Hello!",
+            "csrf_token": csrf_token,
+        },
     )
     assert r.status_code == 200
     assert "Thank you, Jane Doe" in r.text

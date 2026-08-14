@@ -1,4 +1,5 @@
 import os
+import re
 
 os.environ.setdefault("SECRET_KEY", "test-secret-key")
 
@@ -10,6 +11,7 @@ from sqlalchemy.pool import StaticPool
 
 from app.database import Base, get_db
 from app.main import app
+from app.rate_limit import limiter
 
 
 @pytest_asyncio.fixture
@@ -36,6 +38,7 @@ async def db_session_factory():
 
 @pytest_asyncio.fixture
 async def client(db_session_factory):
+    limiter.reset()
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
@@ -44,3 +47,10 @@ async def client(db_session_factory):
 @pytest.fixture
 def db_session(db_session_factory):
     return db_session_factory
+
+
+async def get_csrf_token(client, path="/contact"):
+    r = await client.get(path)
+    match = re.search(r'name="csrf_token" value="([^"]+)"', r.text)
+    assert match, f"no csrf_token found on {path}"
+    return match.group(1)

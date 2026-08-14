@@ -4,8 +4,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth import hash_password, verify_password
+from app.csrf import verify_csrf
 from app.database import get_db
 from app.models import User
+from app.rate_limit import limiter
 from app.templating import render
 
 router = APIRouter()
@@ -16,7 +18,8 @@ async def signup(request: Request):
     return RedirectResponse(url="/login?view=signup", status_code=307)
 
 
-@router.post("/signup", response_class=HTMLResponse)
+@router.post("/signup", response_class=HTMLResponse, dependencies=[Depends(verify_csrf)])
+@limiter.limit("5/minute")
 async def signup_submit(
     request: Request,
     name: str = Form(...),
@@ -32,6 +35,8 @@ async def signup_submit(
         error = "Passwords do not match."
     elif len(password) < 8:
         error = "Password must be at least 8 characters."
+    elif len(password.encode("utf-8")) > 72:
+        error = "Password must be at most 72 characters."
     elif (
         await db.execute(select(User).where(User.email == email))
     ).scalar_one_or_none() is not None:
@@ -64,7 +69,8 @@ async def login(request: Request, view: str = "login", db: AsyncSession = Depend
     return await render(request, db, "login.html", "/login", view=view)
 
 
-@router.post("/login", response_class=HTMLResponse)
+@router.post("/login", response_class=HTMLResponse, dependencies=[Depends(verify_csrf)])
+@limiter.limit("5/minute")
 async def login_submit(
     request: Request,
     email: str = Form(...),
@@ -90,7 +96,7 @@ async def login_submit(
     return RedirectResponse(url="/", status_code=303)
 
 
-@router.post("/logout")
+@router.post("/logout", dependencies=[Depends(verify_csrf)])
 async def logout(request: Request):
     request.session.clear()
     return RedirectResponse(url="/", status_code=303)
